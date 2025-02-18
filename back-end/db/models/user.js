@@ -7,7 +7,7 @@ const {
 const sequelize = require('../../config/database');
 const bcrypt = require('bcrypt');
 const AppError = require('../../utils/appError');
-// const project = require('./project');
+const address = require('./address');
 
 const user = sequelize.define('user', {
   id: {
@@ -70,7 +70,7 @@ const user = sequelize.define('user', {
   phoneNo: {
     type: DataTypes.NUMBER,
     allowNull: false,
-    validate:{
+    validate: {
       notNull: {
         msg: 'phone number cannot be null',
       },
@@ -132,10 +132,11 @@ const user = sequelize.define('user', {
   modelName: 'user',
 })
 
-// user.hasMany(project, {
-//   foreignKey: 'createdBy'
-// })
-// project.belongsTo(user, {
-//   foreignKey: 'createdBy'
-// })
+ user.hasMany(address, {
+  foreignKey: 'userId'
+ })
+ address.belongsTo(user, {
+  foreignKey: 'userId',
+  onDelete: 'cascade'
+ })
 module.exports = user;
