@@ -17,7 +17,7 @@ const product = sequelize.define('product', {
     type: DataTypes.STRING,
     allowNull: false,
     validate: {
-      isNull: {
+      notNull: {
         msg: 'title cannot be null',
       },
       notEmpty: {
@@ -29,7 +29,7 @@ const product = sequelize.define('product', {
     type: DataTypes.STRING,
     allowNull: false,
     validate: {
-      isNull: {
+      notNull: {
         msg: 'shortDescription cannot be null',
       },
       notEmpty: {
@@ -41,7 +41,7 @@ const product = sequelize.define('product', {
     type: DataTypes.STRING,
     allowNull: false,
     validate: {
-      isNull: {
+      notNull: {
         msg: 'description cannot be null',
       },
       notEmpty: {
@@ -53,7 +53,7 @@ const product = sequelize.define('product', {
     type: DataTypes.STRING,
     allowNull: false,
     validate: {
-      isNull: {
+      notNull: {
         msg: 'slug cannot be null',
       },
       notEmpty: {
@@ -72,7 +72,7 @@ const product = sequelize.define('product', {
     type: DataTypes.STRING,
     allowNull: false,
     validate: {
-      isNull: {
+      notNull: {
         msg: 'roast_level cannot be null',
       },
       notEmpty: {
@@ -84,7 +84,7 @@ const product = sequelize.define('product', {
     type: DataTypes.STRING,
     allowNull: false,
     validate: {
-      isNull: {
+      notNull: {
         msg: 'origin cannot be null',
       },
       notEmpty: {
@@ -96,7 +96,7 @@ const product = sequelize.define('product', {
     type: DataTypes.STRING,
     allowNull: false,
     validate: {
-      isNull: {
+      notNull: {
         msg: 'processing_method cannot be null',
       },
       notEmpty: {
@@ -108,7 +108,7 @@ const product = sequelize.define('product', {
     type: DataTypes.DOUBLE,
     allowNull: false,
     validate: {
-      isNull: {
+      notNull: {
         msg: 'price cannot be null',
       },
       notEmpty: {
@@ -123,7 +123,7 @@ const product = sequelize.define('product', {
     type: DataTypes.INTEGER,
     allowNull: false,
     validate: {
-      isNull: {
+      notNull: {
         msg: 'stock_quantity cannot be null',
       },
       notEmpty: {
@@ -138,7 +138,7 @@ const product = sequelize.define('product', {
     type: DataTypes.STRING,
     allowNull: false,
     validate: {
-      isNull: {
+      notNull: {
         msg: 'unit cannot be null',
       },
       notEmpty: {
@@ -173,7 +173,6 @@ product.hasMany(image, {
 })
 image.belongsTo(product,{
   foreignKey: 'product_id',
-  onDelete: 'cascade'
 })
 
 module.exports = product

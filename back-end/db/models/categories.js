@@ -17,20 +17,22 @@ const categories = sequelize.define('categories', {
   name: {
     type: DataTypes.STRING,
     allowNull: false,
+    unique: true,
     validate: {
-      isNull: {
+      notNull: {
         msg: 'name cannot be null'
       },
       notEmpty: {
         msg: 'name cannot be empty'
-      }
+      },
     }
   },
   slug: {
     type: DataTypes.STRING,
     allowNull: false,
+    unique: true,
     validate: {
-      isNull: {
+      notNull: {
         msg: 'slug cannot be null'
       },
       notEmpty: {
@@ -42,7 +44,7 @@ const categories = sequelize.define('categories', {
     type: DataTypes.STRING,
     allowNull: false,
     validate: {
-      isNull: {
+      notNull: {
         msg: 'description cannot be null'
       },
       notEmpty: {
@@ -73,11 +75,10 @@ const categories = sequelize.define('categories', {
 })
 
 categories.hasMany(product, {
-  foreignKey: 'category_id'
+  foreignKey: 'category_id',
 }),
   product.belongsTo(categories, {
     foreignKey: 'category_id',
-    onDelete: 'cascade'
   })
 
 module.exports = categories

@@ -17,7 +17,7 @@ const address = sequelize.define('address', {
     type: DataTypes.STRING,
     allowNull: false,
     validate: {
-      isNull: {
+      notNull: {
         msg: 'firstName cannot be null'
       },
       notEmpty:{
@@ -29,7 +29,7 @@ const address = sequelize.define('address', {
     type: DataTypes.STRING,
     allowNull: false,
     validate: {
-      isNull: {
+      notNull: {
         msg: 'lastName cannot be null'
       },
       notEmpty:{
@@ -41,7 +41,7 @@ const address = sequelize.define('address', {
     type: DataTypes.STRING,
     allowNull: false,
     validate: {
-      isNull: {
+      notNull: {
         msg: 'address cannot be null'
       },
       notEmpty:{
@@ -53,7 +53,7 @@ const address = sequelize.define('address', {
     type: DataTypes.STRING,
     allowNull: false,
     validate: {
-      isNull: {
+      notNull: {
         msg: 'city cannot be null'
       },
       notEmpty:{
@@ -65,7 +65,7 @@ const address = sequelize.define('address', {
     type: DataTypes.STRING,
     allowNull: false,
     validate: {
-      isNull: {
+      notNull: {
         msg: 'country cannot be null'
       },
       notEmpty:{
@@ -87,7 +87,7 @@ const address = sequelize.define('address', {
     type: DataTypes.NUMBER,
     allowNull: false,
     validate: {
-      isNull: {
+      notNull: {
         msg: 'phone cannot be null'
       },
       notEmpty:{

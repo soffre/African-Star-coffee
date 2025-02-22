@@ -40,6 +40,10 @@ const image = sequelize.define('image', {
   deletedAt: {
     type: DataTypes.DATE
   }
+},{
+  paranoid: true,
+  freezeTableName: true,
+  modelName: 'image',
 })
 
 module.exports = image
