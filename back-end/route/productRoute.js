@@ -8,8 +8,9 @@ const {
     getByRoastOrOrigin,
     getByNewArrival,
     filterByPrice,
-    searchBySlug, 
-    updateProductById} = require('../controller/productController')
+    searchBySlug,
+    updateProductById,
+    sortProductBy } = require('../controller/productController')
 
 const { upload } = require('../utils/upload')
 
@@ -32,6 +33,7 @@ router.route('/by_origin/:origin').get(getByRoastOrOrigin)
 router.route('/by_newest').get(getByNewArrival)
 router.route('/by_price').get(filterByPrice)
 router.route('/search').get(searchBySlug)
+router.route('/sortBy').get(sortProductBy)
 
 
 module.exports = router

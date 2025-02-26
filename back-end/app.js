@@ -5,6 +5,7 @@ const cors = require('cors')
 const authRoute = require('./route/authRoute');
 const categoryRoute = require('./route/categoryRoute');
 const productRoute = require('./route/productRoute');
+const addressRoute = require('./route/addressRoute');
 const catchAsync = require('./utils/catchAsync');
 const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controller/errorController');
@@ -21,6 +22,7 @@ app.use(express.static(path.join(__dirname, 'public')))
 app.use('/api/v1/auth', authRoute)
 app.use('/api/v1/category', categoryRoute)
 app.use('/api/v1/product', productRoute)
+app.use('/api/v1/shippingAddress',addressRoute)
 
 
 // handle to any route request that does not exist

@@ -114,14 +114,14 @@ const getProductById = catchAsync(async (req, res, next) => {
 
 })
 
-const updateProductById = catchAsync(async(req, res, next) => {
+const updateProductById = catchAsync(async (req, res, next) => {
     const productId = req.params.id
     const body = req.body
 
     // Find the existing product
     const existingProduct = await product.findOne({
         include: image,
-        where: {id: productId}
+        where: { id: productId }
     })
 
     if (!existingProduct) {
@@ -129,7 +129,7 @@ const updateProductById = catchAsync(async(req, res, next) => {
     }
 
     existingProduct.toJSON()
-        // Update product details
+    // Update product details
     await existingProduct.update({
         title: body.title,
         shortDescription: body.shortDescription,
@@ -142,35 +142,34 @@ const updateProductById = catchAsync(async(req, res, next) => {
         stock_quantity: body.stock_quantity,
         unit: body.unit
     })
-    
-     // Handle image updates
-     if(req.files && req.files.length > 0){
+
+    // Handle image updates
+    if (req.files && req.files.length > 0) {
         // Delete old images from storage
         const existingImage = existingProduct.images
-        existingImage.forEach( img => {
-            const imagePath = path.join(__dirname, '../public',img.path)
-            if(fs.existsSync(imagePath)){
+        existingImage.forEach(img => {
+            const imagePath = path.join(__dirname, '../public', img.path)
+            if (fs.existsSync(imagePath)) {
                 fs.unlinkSync(imagePath)
             }
         })
-        
-         // Delete old image records from database
-         await image.destroy({ where: { product_id: productId } })
 
-         // Insert new image records
-         const newImages = req.files.map(file => ({
+        // Delete old image records from database
+        await image.destroy({ where: { product_id: productId } })
+
+        // Insert new image records
+        const newImages = req.files.map(file => ({
             product_id: existingProduct.id,
             file_name: file.filename,
             path: `/product/image/${file.filename}`,
             size: file.size,
-         }))
-         await image.bulkCreate(newImages)
+        }))
+        await image.bulkCreate(newImages)
     }
 
     return res.status(200).json({
         status: 'success',
         message: 'Product updated successfully',
-        data: existingProduct
     })
 })
 
@@ -270,7 +269,7 @@ const getByRoastOrOrigin = catchAsync(async (req, res, next) => {
     else {
         query.roast_level = req.params.roastLevel
     }
-  
+
     const products = await product.findAndCountAll({
         distinct: true,
         attributes: ['id', 'title', 'price', 'unit', 'roast_level', 'origin', 'createdAt'], where: query,
@@ -414,6 +413,53 @@ const searchBySlug = catchAsync(async (req, res, next) => {
     })
 })
 
+const sortProductBy = catchAsync(async (req, res, next) => {
+    //parse the page and pageSize form the query parameter for pagination
+    const page = parseInt(req.query.page) || 1
+    const pageSize = parseInt(req.query.pageSize) || 5
+    const offset = (page - 1) * pageSize
+    const sortedAttribute = req.query.attribute
+    const sortRule = req.query.order || 'ASC' // Default sorting order: ASC
+
+    // Validate sorting attribute against allowed columns
+    const allowedAttribute = ['price', 'createdAt']
+    if (!allowedAttribute.includes(sortedAttribute)) {
+        return next(new AppError('Invalid sorting attribute', 400));
+    }
+
+    //validate the sorting order
+    if (!['ASC', 'DESC'].includes(sortRule.toUpperCase())) {
+        return next(new AppError('Invalid sorting order', 400))
+    }
+
+    const sortedProduct = await product.findAndCountAll({
+        distinct: true,
+        attributes: ['id', 'title', 'price', 'unit', 'roast_level', 'origin', 'createdAt'],
+        include: [
+            { model: categories, attributes: { exclude: ['description', 'createdAt', 'updatedAt', 'deletedAt'] } },
+            { model: image, attributes: { exclude: ['createdAt', 'updatedAt', 'deletedAt', 'size', 'product_id'] } },
+        ],
+        order: [[sortedAttribute, sortRule.toUpperCase()]],
+        offset: offset,
+        limit: pageSize
+    })
+
+    if (!sortedProduct.rows.length) {
+        return next(new AppError('No product found', 404))
+    }
+
+    return res.status(200).json({
+        status: 'success',
+        data: {
+            products: sortedProduct.rows,
+            total: sortedProduct.count,
+            currentPage: page,
+            totalPage: Math.ceil(sortedProduct.count / pageSize),
+            pageSize
+        }
+    })
+})
+
 module.exports = {
     createProduct,
     getAllProduct,
@@ -425,4 +471,5 @@ module.exports = {
     filterByPrice,
     searchBySlug,
     updateProductById,
+    sortProductBy,
 }
