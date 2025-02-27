@@ -1,4 +1,4 @@
-const { authentication } = require('../controller/authController')
+const { authentication, restrictTo } = require('../controller/authController')
 const {
     createProduct,
     getAllProduct,
@@ -17,13 +17,13 @@ const { upload } = require('../utils/upload')
 const router = require('express').Router()
 
 router.route('/')
-    .post(authentication, upload.array('Images', 10), createProduct)
+    .post(authentication,restrictTo('1'), upload.array('Images', 10), createProduct)
     .get(getAllProduct)
 
 router.route('/by_product_id/:id')
     .get(getProductById)
-    .delete(authentication, deleteProductById)
-    .patch(authentication, upload.array('Images', 10), updateProductById)
+    .delete(authentication, restrictTo('1'), deleteProductById)
+    .patch(authentication,restrictTo('1'), upload.array('Images', 10), updateProductById)
 
 router.route('/by_category_id/:category_id').get(getByCategory)
 router.route('/by_category/:category_slug').get(getByCategory)
