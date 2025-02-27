@@ -11,30 +11,30 @@ const generateToken = (payload) => {
 }
 
 const signup = catchAsync(async (req, res, next) => {
-    const body = req.body;
-
-    if (!['1', '2'].includes(body.userType)) {
-        throw new AppError('Invalid user type', 400)
-    }
+    const { firstName, lastName, email, phoneNo, password, confirmPassword } = req.body;
+    const userType = "2"
 
     const newUser = await user.create({
-        userType: body.userType,
-        firstName: body.firstName,
-        lastName: body.lastName,
-        email: body.email,
-        phoneNo: body.phoneNo,
-        password: body.password,
-        confirmPassword: body.confirmPassword
+        userType: userType,
+        firstName: firstName,
+        lastName: lastName,
+        email: email,
+        phoneNo: phoneNo,
+        password: password,
+        confirmPassword: confirmPassword
     })
 
     if (!newUser) {
-        return next(new AppError('Failed to create the user', 400))
+        return next(new AppError('SignUp fail try again!', 400))
     }
 
     const result = newUser.toJSON();
 
+    delete result.userType
     delete result.password
     delete result.deletedAt
+    delete result.createdAt
+    delete result.updatedAt
 
     result.token = generateToken({
         id: result.id,
@@ -95,9 +95,9 @@ const authentication = catchAsync(async (req, res, next) => {
 })
 
 // Authorization
-const restrictTo = (...userType) =>{
-    const checkPermission = (req, res, next) =>{
-        if(!userType.includes(req.user.userType)){
+const restrictTo = (...userType) => {
+    const checkPermission = (req, res, next) => {
+        if (!userType.includes(req.user.userType)) {
             return next(
                 new AppError("You don't have permission to perform this action",
                     403)
