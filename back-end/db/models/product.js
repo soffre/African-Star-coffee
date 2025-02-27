@@ -6,6 +6,7 @@ const {
 const sequelize = require('../../config/database');
 const { default: slugify } = require('slugify');
 const image = require('./image');
+const order_items = require('./order_items');
 const product = sequelize.define('product', {
   id: {
     allowNull: false,
@@ -168,11 +169,19 @@ const product = sequelize.define('product', {
   }
 })
 
+// product with image assocation
 product.hasMany(image, {
   foreignKey: 'product_id',
 })
-image.belongsTo(product,{
+image.belongsTo(product, {
   foreignKey: 'product_id',
 })
 
+// product with order_items assocation
+product.hasMany(order_items, {
+  foreignKey: 'product_id'
+})
+order_items.belongsTo(product, {
+  foreignKey: 'product_id'
+})
 module.exports = product

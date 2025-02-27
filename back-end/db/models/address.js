@@ -4,6 +4,7 @@ const {
   DataTypes
 } = require('sequelize');
 const sequelize = require('../../config/database');
+const orders = require('./orders');
 
 
 const address = sequelize.define('address', {
@@ -20,7 +21,7 @@ const address = sequelize.define('address', {
       notNull: {
         msg: 'firstName cannot be null'
       },
-      notEmpty:{
+      notEmpty: {
         msg: 'firstName cannot be empty'
       }
     }
@@ -32,7 +33,7 @@ const address = sequelize.define('address', {
       notNull: {
         msg: 'lastName cannot be null'
       },
-      notEmpty:{
+      notEmpty: {
         msg: 'lastName cannot be empty'
       }
     }
@@ -44,7 +45,7 @@ const address = sequelize.define('address', {
       notNull: {
         msg: 'address cannot be null'
       },
-      notEmpty:{
+      notEmpty: {
         msg: 'address cannot be empty'
       },
     }
@@ -56,7 +57,7 @@ const address = sequelize.define('address', {
       notNull: {
         msg: 'city cannot be null'
       },
-      notEmpty:{
+      notEmpty: {
         msg: 'city cannot be empty'
       },
     }
@@ -68,11 +69,11 @@ const address = sequelize.define('address', {
       notNull: {
         msg: 'country cannot be null'
       },
-      notEmpty:{
+      notEmpty: {
         msg: 'country cannot be empty'
       },
       isIn: {
-        args: [['ethiopia', 'Eritrea','djibutti']],// update this when all country are specified on the constant file
+        args: [['ethiopia', 'Eritrea', 'djibutti']],// update this when all country are specified on the constant file
         msg: 'Unsupported country'
       }
     }
@@ -90,7 +91,7 @@ const address = sequelize.define('address', {
       notNull: {
         msg: 'phone cannot be null'
       },
-      notEmpty:{
+      notEmpty: {
         msg: 'phone cannot be empty'
       },
       isNumeric: {
@@ -121,10 +122,18 @@ const address = sequelize.define('address', {
   deletedAt: {
     type: DataTypes.DATE
   }
-},{
+}, {
   paranoid: true,
   freezeTableName: true,
   modelName: 'address',
+})
+
+// address with orders assocation
+address.hasOne(orders, {
+  foreignKey: 'address_id'
+})
+orders.belongsTo(address, {
+  foreignKey: 'address_id'
 })
 
 module.exports = address

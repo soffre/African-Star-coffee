@@ -8,6 +8,7 @@ const sequelize = require('../../config/database');
 const bcrypt = require('bcrypt');
 const AppError = require('../../utils/appError');
 const address = require('./address');
+const orders = require('./orders');
 
 const user = sequelize.define('user', {
   id: {
@@ -132,11 +133,21 @@ const user = sequelize.define('user', {
   modelName: 'user',
 })
 
- user.hasMany(address, {
+// user with address assocation
+user.hasMany(address, {
   foreignKey: 'userId'
- })
- address.belongsTo(user, {
+})
+address.belongsTo(user, {
   foreignKey: 'userId',
   onDelete: 'cascade'
- })
+})
+
+// user with order assocation
+user.hasMany(orders, {
+  foreignKey: 'userId'
+})
+orders.belongsTo(user, {
+  foreignKey: 'userId'
+})
+
 module.exports = user;
