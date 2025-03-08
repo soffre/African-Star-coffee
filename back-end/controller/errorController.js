@@ -30,8 +30,6 @@ const sendErrorProd = (error, res) => {
         status: 'error',
         message: "Something went very wrong"
     })
-
-
 }
 
 const globalErrorHandler = (err, req, res, next) => {

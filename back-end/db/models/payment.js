@@ -33,7 +33,21 @@ const payment = sequelize.define('payment', {
     allowNull: false
   },
   transactionId: {
-    type: DataTypes.STRING
+    type: DataTypes.STRING,
+    allowNull: true
+  },
+  email_address: {
+    type: DataTypes.STRING,
+    allowNull: true, // Only for PayPal
+    validate: {
+      isEmail: {
+        msg: 'Incorrect email format'
+      }
+    }
+  },
+  phone_number: {
+    type: DataTypes.INTEGER,
+    allowNull: true, // Only for Chapa
   },
   createdAt: {
     allowNull: false,

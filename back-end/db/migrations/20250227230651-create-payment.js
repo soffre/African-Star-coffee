@@ -30,7 +30,16 @@ module.exports = {
         allowNull: false
       },
       transactionId: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: true
+      },
+      email_address: {
+        type: Sequelize.STRING,
+        allowNull: true, // Only for PayPal
+      },
+      phone_number: {
+        type: Sequelize.INTEGER,
+        allowNull: true, // Only for Chapa
       },
       createdAt: {
         allowNull: false,
